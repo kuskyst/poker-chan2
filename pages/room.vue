@@ -36,7 +36,6 @@
         </v-col>
       </v-row>
       <div class="d-flex flex-nowrap">
-
         <v-btn
           color="blue"
           class="mb-2 mr-2"
@@ -53,7 +52,7 @@
       </div>
     </div>
 
-    <v-container class="pt-2">
+    <v-container class="pt-2 pr-0 pl-0">
       <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
         <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2)" class="overflow-x-auto">
@@ -72,42 +71,48 @@
         </v-row>
       </v-sheet>
       <v-card
-          class="position-absolute left-10 bottom-10 d-inline rounded-circle d-flex justify-center align-center"
-          color="teal-accent-1"
-          :style="handsStyle(player.hands.length / 2, true)"
-          width="80px"
-          height="80px"
-        >
+        class="position-absolute ml-10 d-inline rounded-circle d-flex justify-center align-center"
+        color="teal-accent-1"
+        :style="handsStyle(player.hands.length / 2, true)"
+        width="65px"
+        height="65px"
+      >
         {{ Object.keys(room?.votes).length }} / {{ room?.members.length }}
       </v-card>
-      <v-row class="position-absolute left-0 right-0 bottom-0 pt-2 overflow-x-scroll flex-nowrap" justify="center">
-        <v-col v-for="(hand, index) in player.hands" :key="index" cols="auto" class="d-flex justify-center">
-          <v-hover>
-            <template #default="{ isHovering, props }">
-              <score-card
-                v-bind="props"
-                :style="handsStyle(index, isHovering ?? false)"
-                draggable="true"
-                class="ml-n6 mr-n6"
-                :open="true"
-                :score="hand"
-                @dragstart="onDrag(hand, $event)"
-                @click="play(hand)"
-                :ripple="{ class: 'bg-green-accent-1' }"
-                :class="{
-                  'bg-green-accent-2': player.score == hand,
-                  'text-white': player.score == hand
-                }"
-              />
-            </template>
-          </v-hover>
-          <v-card v-if="player.hands.length == index + 1" height="130" width="90" class="ml-n5 mr-n5" :style="handsStyle(player.hands.length - 1, false)">
-            <v-number-input flat hide-details inset v-model="player.drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
-            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(player.drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
     </v-container>
+
+    <v-row class="position-absolute left-0 right-0 bottom-0 pt-2 overflow-x-scroll flex-nowrap" justify="center">
+      <v-col
+        v-for="(hand, index) in player.hands"
+        :key="index"
+        cols="auto"
+        class="d-flex justify-center"
+      >
+        <v-hover>
+          <template #default="{ isHovering, props }">
+            <score-card
+              v-bind="props"
+              :style="handsStyle(index, isHovering ?? false)"
+              draggable="true"
+              class="ml-n6 mr-n6"
+              :open="true"
+              :score="hand"
+              @dragstart="onDrag(hand, $event)"
+              @click="play(hand)"
+              :ripple="{ class: 'bg-green-accent-1' }"
+              :class="{
+                'bg-green-accent-2': player.score == hand,
+                'text-white': player.score == hand
+              }"
+            />
+          </template>
+        </v-hover>
+        <v-card v-if="player.hands.length == index + 1" height="130" width="90" class="ml-n5 mr-n5" :style="handsStyle(player.hands.length - 1, false)">
+          <v-number-input flat hide-details inset v-model="player.drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
+          <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(player.drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
     <confirm-dialog
       :show="player.confirmDialog"
       @update:show="player.confirmDialog = $event"
