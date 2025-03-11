@@ -180,7 +180,7 @@ const handsStyle = (index: number, isHovering: boolean): StyleValue => {
     transition: 'all 0.3s ease',
     zIndex: 99,
     border: `2px solid ${colors.green.accent2}`,
-    boxShadow: `0 0 8px ${colors.green.accent2}`,
+    boxShadow: `0 0 28px ${colors.green.accent2}`,
   }
 }
 
