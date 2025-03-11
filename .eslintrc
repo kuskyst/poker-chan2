@@ -1,0 +1,26 @@
+// .eslintrc
+{
+    "root": true,
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "@nuxtjs/eslint-config-typescript",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:vue/vue3-recommended"
+    ],
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+      "parser": "@typescript-eslint/parser",
+      "sourceType": "module"
+    },
+    "plugins": ["vue", "@typescript-eslint"],
+    "overrides": [
+      {
+        "files": ["layouts/*.vue", "pages/**/*.vue"],
+        "rules": { "vue/multi-word-component-names": "off" }
+      }
+    ]
+}
