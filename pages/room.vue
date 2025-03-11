@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-green-lighten-3 h-100">
+  <div class="bg-green-lighten-3 h-100" width="100vh">
     <div class="bg-teal-accent-3 text-grey-darken-2 pt-2 pl-3 pr-3 text-h6">
       <v-text-field
         append-inner-icon="mdi-check-bold"
@@ -28,18 +28,18 @@
           />
         </v-col>
         <v-col class="text-truncate text-body-1 mt-1">
+          <v-icon class="mt-1 mr-3"
+            :icon="player.status === 'CLOSED' ? 'mdi-connection'
+            : player.status === 'OPEN' ? 'mdi-cast-connected'
+            : 'mdi-transit-connection-variant'" />
           <v-btn icon="mdi-human-male-female-child" @click="player.memberDialog = true"></v-btn>
         </v-col>
       </v-row>
-
       <div class="d-flex flex-nowrap">
-        <v-icon class="mt-1"
-          :icon="player.status === 'CLOSED' ? 'mdi-connection'
-          : player.status === 'OPEN' ? 'mdi-cast-connected'
-          : 'mdi-transit-connection-variant'" />
+
         <v-btn
           color="blue"
-          class="mb-2 ml-2 mr-2"
+          class="mb-2 mr-2"
           @click="room?.members.length > Object.keys(room?.votes).length ? player.confirmDialog = true : reveal()"
           prepend-icon="mdi-cards-playing"
           :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
