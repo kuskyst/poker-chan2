@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="visible" class="w-75">
-    <v-table :fixed-header="true" width="100%" max-width="100%" height="500" class="pa-4">
+    <v-table :fixed-header="true" width="100%" max-width="100%" max-height="500" class="pa-4">
       <thead>
         <tr>
           <th class="border-e-sm border-md bg-green-accent-2" colspan="2">members</th>
