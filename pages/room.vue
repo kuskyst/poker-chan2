@@ -1,20 +1,31 @@
 <template>
   <div class="bg-green-lighten-3 h-100" width="100vh">
     <div class="bg-teal-accent-3 text-grey-darken-2 pt-2 pl-3 pr-3 text-h6">
-      <v-text-field
-        append-inner-icon="mdi-check-bold"
-        v-model="room.title"
-        bg-color="white"
-        label="title"
-        variant="solo"
-        clearable
-        class="w-50 mb-2"
-        hide-details
-        @blur="sendMessage({title: room?.title})"
-        @click:append-inner="sendMessage({title: room?.title})"
-      />
       <v-row>
-        <v-col cols="4">
+        <v-col cols="6" class="pb-0">
+          <v-text-field
+            append-inner-icon="mdi-check-bold"
+            v-model="room.title"
+            bg-color="white"
+            label="title"
+            variant="solo"
+            clearable
+            class="mb-2"
+            hide-details
+            @blur="sendMessage({title: room?.title})"
+            @click:append-inner="sendMessage({title: room?.title})"
+          />
+        </v-col>
+        <v-col class="pb-0 d-flex align-center">
+          <v-icon class="mb-1 mr-2"
+            :icon="player.status === 'CLOSED' ? 'mdi-connection'
+            : player.status === 'OPEN' ? 'mdi-cast-connected'
+            : 'mdi-transit-connection-variant'" />
+            <v-btn class="ml-2 mb-2" icon="mdi-human-male-female-child" @click="player.memberDialog = true"></v-btn>
+        </v-col>
+      </v-row>
+      <v-row class="mt-0">
+        <v-col cols="4" class="pb-0">
           <v-text-field
             append-inner-icon="mdi-check-bold"
             v-model="player.name"
@@ -27,33 +38,26 @@
             @click:append-inner="sendMessage({name: player.name})"
           />
         </v-col>
-        <v-col class="text-truncate text-body-1 mt-1">
-          <v-icon class="mt-1 mr-3"
-            :icon="player.status === 'CLOSED' ? 'mdi-connection'
-            : player.status === 'OPEN' ? 'mdi-cast-connected'
-            : 'mdi-transit-connection-variant'" />
-          <v-btn icon="mdi-human-male-female-child" @click="player.memberDialog = true"></v-btn>
+        <v-col cols="auto" class="d-flex align-center mt-1 pa-0 mr-0">
+          <v-btn
+            color="blue"
+            class="ml-2 mr-2"
+            @click="room?.members.length > Object.keys(room?.votes).length ? player.confirmDialog = true : reveal()"
+            prepend-icon="mdi-cards-playing"
+            :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
+          >
+            Reveal
+          </v-btn>
+          <v-btn color="red" class="ml-1" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
+        </v-col>
+        <v-col class="d-flex align-center mt-1 ml-6 pa-0">
+          Avarage: {{ room.reveal ? player.average : '??' }}
         </v-col>
       </v-row>
-      <div class="d-flex flex-nowrap">
-        <v-btn
-          color="blue"
-          class="mb-2 mr-2"
-          @click="room?.members.length > Object.keys(room?.votes).length ? player.confirmDialog = true : reveal()"
-          prepend-icon="mdi-cards-playing"
-          :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
-        >
-          Reveal
-        </v-btn>
-        <v-btn color="red" class="mb-2 ml-1 mr-1" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
-        <div class="d-inline text-body-1 mt-2">
-          Avarage: {{ room.reveal ? player.average : '??' }}
-        </div>
-      </div>
     </div>
 
-    <v-container class="pt-2 pr-0 pl-0">
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="55vh">
+    <v-container class="pt-4 pr-0 pl-0">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="60vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="80%" height="80%" />
         <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2)" class="overflow-x-auto">
           <v-col cols="auto" class="text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
