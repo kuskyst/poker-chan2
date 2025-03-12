@@ -88,29 +88,31 @@
         cols="auto"
         class="d-flex justify-center"
       >
-        <v-hover>
-          <template #default="{ isHovering, props }">
-            <score-card
-              v-bind="props"
-              :style="handsStyle(index, isHovering ?? false)"
-              draggable="true"
-              class="ml-n6 mr-n6"
-              :open="true"
-              :score="hand"
-              @dragstart="onDrag(hand, $event)"
-              @click="play(hand)"
-              :ripple="{ class: 'bg-green-accent-1' }"
-              :class="{
-                'bg-green-accent-2': player.score == hand,
-                'text-white': player.score == hand
-              }"
-            />
-          </template>
+        <v-hover #default="{ isHovering, props }">
+          <score-card
+            v-bind="props"
+            :style="handsStyle(index, isHovering ?? false)"
+            draggable="true"
+            class="ml-n6 mr-n6"
+            :open="true"
+            :score="hand"
+            @dragstart="onDrag(hand, $event)"
+            @click="play(hand)"
+            :ripple="{ class: 'bg-green-accent-1' }"
+            :class="{
+              'bg-green-accent-2': player.score == hand,
+              'text-white': player.score == hand
+            }"
+          />
         </v-hover>
-        <v-card v-if="player.hands.length == index + 1" height="130" width="90" class="ml-n5 mr-n5" :style="handsStyle(player.hands.length - 1, false)">
-          <v-number-input flat hide-details inset v-model="player.drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
-          <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(player.drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
-        </v-card>
+      </v-col>
+      <v-col cols="auto" class="d-flex justify-center">
+        <v-hover #default="{ isHovering, props }">
+          <v-card v-bind="props" height="130" width="90" class="ml-n6 mr-n6" :style="handsStyle(player.hands.length, isHovering ?? false)">
+            <v-number-input flat hide-details inset v-model="player.drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
+            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(player.drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
+          </v-card>
+        </v-hover>
       </v-col>
     </v-row>
     <confirm-dialog
@@ -167,7 +169,8 @@ const votesStyle = (index: number): StyleValue => {
 }
 
 const handsStyle = (index: number, isHovering: boolean): StyleValue => {
-  const distance = player.value.hands.map((_, index) => index - Math.floor(player.value.hands.length / 2));
+  let distance = player.value.hands.map((_, index) => index - Math.floor(player.value.hands.length / 2));
+  distance.push(distance[distance.length - 1])
   return !isHovering ? {
     transform: `rotate(${distance[index] * 6}deg)`,
     marginTop: `${(distance[index] > 0 ? distance[index] : distance[index] * -1) * 10}px`,
